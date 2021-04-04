@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 // import Searchbar from './components/Searchbar';
 // import ImageGallery from './components/ImageGallery';
+// import ImageGalleryItem from './components/ImageGalleryItem';
 // import Button from './components/Button';
 // import Loader from './components/Loader';
 import Modal from './components/Modal';
-// import { v4 as uuidv4 } from 'uuid';
+
 import './App.scss';
 
 class App extends Component {
@@ -23,7 +24,7 @@ class App extends Component {
     // console.log(this.state)
   }
 
-  // Function to open/close modal box
+  // ======================== Function to open/close modal box ====================
   toggleModal = () => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
@@ -37,6 +38,7 @@ class App extends Component {
       <div>
         {/* <Searchbar /> */}
         {/* <ImageGallery /> */}
+
         {/* <Button /> */}
         {/* <Loader /> */}
 
