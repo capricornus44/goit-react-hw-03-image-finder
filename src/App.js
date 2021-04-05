@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import pixabayApi from './services/pixabayApi';
 import Searchbar from './components/Searchbar';
 // import Loader from './components/Loader';
 // import ImageGallery from './components/ImageGallery';
@@ -32,17 +33,14 @@ class App extends Component {
 
   fetchHits = () => {
     const { currentPage, request } = this.state;
+    const options = { currentPage, request };
 
-    axios
-      .get(
-        `https://pixabay.com/api/?q=${request}&page=${currentPage}&key=20669309-c97d1ec468a66ad87fd39e114&image_type=photo&orientation=horizontal&per_page=12`,
-      )
-      .then(response => {
-        this.setState(prevState => ({
-          hits: [...prevState.hits, ...response.data.hits],
-          currentPage: prevState.currentPage + 1,
-        }));
-      });
+    pixabayApi.fetchHits(options).then(hits => {
+      this.setState(prevState => ({
+        hits: [...prevState.hits, ...hits],
+        currentPage: prevState.currentPage + 1,
+      }));
+    });
   };
 
   // ======================== Function to open/close modal box ====================
@@ -54,7 +52,7 @@ class App extends Component {
 
   // ======================== Rendering ===========================================
   render() {
-    const { showModal, hits, largeImageUrl } = this.state;
+    const { showModal, hits } = this.state;
 
     return (
       <>
