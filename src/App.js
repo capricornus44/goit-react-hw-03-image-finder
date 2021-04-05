@@ -18,6 +18,7 @@ class App extends Component {
     currentPage: 1,
     request: '',
     isLoading: false,
+    error: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,7 +28,12 @@ class App extends Component {
   }
 
   onChangeQuery = seachQuery => {
-    this.setState({ request: seachQuery, currentPage: 1, hits: [] });
+    this.setState({
+      request: seachQuery,
+      currentPage: 1,
+      hits: [],
+      error: null,
+    });
     this.fetchHits(seachQuery);
   };
 
