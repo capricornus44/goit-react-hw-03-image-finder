@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import pixabayApi from './services/pixabayApi';
 import Searchbar from './components/Searchbar';
 // import Loader from './components/Loader';
@@ -68,7 +67,7 @@ class App extends Component {
         {/* <ImageGallery /> */}
         {/* <Loader /> */}
 
-        <Button type="button" onClick={this.fetchHits} />
+        {hits.length > 0 && <Button onClick={this.fetchHits} />}
         {showModal && <Modal onClose={this.toggleModal} />}
       </>
     );
