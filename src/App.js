@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 // import Searchbar from './components/Searchbar';
 // import ImageGallery from './components/ImageGallery';
 // import ImageGalleryItem from './components/ImageGalleryItem';
@@ -15,6 +16,14 @@ class App extends Component {
 
   componentDidMount() {
     console.log('App componentDidMount');
+
+    axios
+      .get(
+        'https://pixabay.com/api/?q=color&page=1&key=20669309-c97d1ec468a66ad87fd39e114&image_type=photo&orientation=horizontal&per_page=12',
+      )
+      .then(response => {
+        console.log(response);
+      });
   }
 
   componentDidUpdate(prevProps, prevState) {
