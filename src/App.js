@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import pixabayApi from './services/pixabayApi';
 import Searchbar from './components/Searchbar';
 // import Loader from './components/Loader';
+import Loader from 'react-loader-spinner';
 // import ImageGallery from './components/ImageGallery';
 // import ImageGalleryItem from './components/ImageGalleryItem';
 import Button from './components/Button';
 import Modal from './components/Modal';
 
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import './App.scss';
 
 class App extends Component {
@@ -15,6 +17,7 @@ class App extends Component {
     hits: [],
     currentPage: 1,
     request: '',
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -34,12 +37,20 @@ class App extends Component {
     const { currentPage, request } = this.state;
     const options = { currentPage, request };
 
-    pixabayApi.fetchHits(options).then(hits => {
-      this.setState(prevState => ({
-        hits: [...prevState.hits, ...hits],
-        currentPage: prevState.currentPage + 1,
-      }));
-    });
+    this.setState({ isLoading: true });
+
+    pixabayApi
+      .fetchHits(options)
+      .then(hits => {
+        this.setState(prevState => ({
+          hits: [...prevState.hits, ...hits],
+          currentPage: prevState.currentPage + 1,
+        }));
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
   };
 
   // ======================== Function to open/close modal box ====================
@@ -51,11 +62,20 @@ class App extends Component {
 
   // ======================== Rendering ===========================================
   render() {
-    const { showModal, hits } = this.state;
+    const { showModal, hits, isLoading } = this.state;
 
     return (
       <>
         <Searchbar onSubmit={this.onChangeQuery} />
+        {isLoading && (
+          <Loader
+            type="Watch"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={3000}
+          />
+        )}
         <ul>
           {hits.map(({ id, webformatURL }) => (
             <li key={id}>
@@ -67,7 +87,7 @@ class App extends Component {
         {/* <ImageGallery /> */}
         {/* <Loader /> */}
 
-        {hits.length > 0 && <Button onClick={this.fetchHits} />}
+        {hits.length > 0 && !isLoading && <Button onClick={this.fetchHits} />}
         {showModal && <Modal onClose={this.toggleModal} />}
       </>
     );
