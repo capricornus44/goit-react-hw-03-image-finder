@@ -56,6 +56,10 @@ class App extends Component {
       .catch(error => this.setState({ error }))
       .finally(() => {
         this.setState({ isLoading: false });
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth',
+        });
       });
   };
 
