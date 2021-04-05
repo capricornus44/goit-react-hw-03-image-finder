@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-// import Searchbar from './components/Searchbar';
+// import fetchImagesUponRequest from './components/services/pixabayApi';
+import Searchbar from './components/Searchbar';
 // import ImageGallery from './components/ImageGallery';
 // import ImageGalleryItem from './components/ImageGalleryItem';
 // import Button from './components/Button';
@@ -12,26 +13,24 @@ import './App.scss';
 class App extends Component {
   state = {
     showModal: false,
+    hits: [],
   };
-
-  componentDidMount() {
-    console.log('App componentDidMount');
-
-    axios
-      .get(
-        'https://pixabay.com/api/?q=color&page=1&key=20669309-c97d1ec468a66ad87fd39e114&image_type=photo&orientation=horizontal&per_page=12',
-      )
-      .then(response => {
-        console.log(response);
-      });
-  }
 
   componentDidUpdate(prevProps, prevState) {
     console.log('App componentDidUpdate');
-
-    // console.log(prevState)
-    // console.log(this.state)
   }
+
+  onChangeQuery = seachQuery => {
+    axios
+      .get(
+        `https://pixabay.com/api/?q=${seachQuery}&page=1&key=20669309-c97d1ec468a66ad87fd39e114&image_type=photo&orientation=horizontal&per_page=12`,
+      )
+      .then(response => {
+        this.setState({
+          hits: response.data.hits,
+        });
+      });
+  };
 
   // ======================== Function to open/close modal box ====================
   toggleModal = () => {
@@ -40,12 +39,21 @@ class App extends Component {
     }));
   };
 
+  // ======================== Rendering ===========================================
   render() {
-    const { showModal } = this.state;
+    const { showModal, hits, largeImageUrl } = this.state;
 
     return (
-      <div>
-        {/* <Searchbar /> */}
+      <>
+        <Searchbar onSubmit={this.onChangeQuery} />
+        <ul>
+          {hits.map(({ id, webformatURL }) => (
+            <li key={id}>
+              <img src={webformatURL} alt="" />
+            </li>
+          ))}
+        </ul>
+
         {/* <ImageGallery /> */}
 
         {/* <Button /> */}
@@ -53,10 +61,10 @@ class App extends Component {
 
         {showModal && (
           <Modal onClose={this.toggleModal}>
-            <img src="" alt="" />
+            <img src={largeImageUrl} alt="" />
           </Modal>
         )}
-      </div>
+      </>
     );
   }
 }
