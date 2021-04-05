@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-// import fetchImagesUponRequest from './components/services/pixabayApi';
 import Searchbar from './components/Searchbar';
+// import Loader from './components/Loader';
 // import ImageGallery from './components/ImageGallery';
 // import ImageGalleryItem from './components/ImageGalleryItem';
-// import Button from './components/Button';
-// import Loader from './components/Loader';
+import Button from './components/Button';
 import Modal from './components/Modal';
 
 import './App.scss';
@@ -14,21 +13,35 @@ class App extends Component {
   state = {
     showModal: false,
     hits: [],
+    currentPage: 1,
+    request: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('App componentDidUpdate');
+    if (prevState.request !== this.state.request) {
+      this.fetchHits();
+    }
   }
 
   onChangeQuery = seachQuery => {
+    this.setState({ request: seachQuery, currentPage: 1, hits: [] });
+    this.fetchHits(seachQuery);
+  };
+
+  // ======================== HTTP request logic ==================================
+
+  fetchHits = () => {
+    const { currentPage, request } = this.state;
+
     axios
       .get(
-        `https://pixabay.com/api/?q=${seachQuery}&page=1&key=20669309-c97d1ec468a66ad87fd39e114&image_type=photo&orientation=horizontal&per_page=12`,
+        `https://pixabay.com/api/?q=${request}&page=${currentPage}&key=20669309-c97d1ec468a66ad87fd39e114&image_type=photo&orientation=horizontal&per_page=12`,
       )
       .then(response => {
-        this.setState({
-          hits: response.data.hits,
-        });
+        this.setState(prevState => ({
+          hits: [...prevState.hits, ...response.data.hits],
+          currentPage: prevState.currentPage + 1,
+        }));
       });
   };
 
@@ -55,15 +68,10 @@ class App extends Component {
         </ul>
 
         {/* <ImageGallery /> */}
-
-        {/* <Button /> */}
         {/* <Loader /> */}
 
-        {showModal && (
-          <Modal onClose={this.toggleModal}>
-            <img src={largeImageUrl} alt="" />
-          </Modal>
-        )}
+        <Button type="button" onClick={this.fetchHits} />
+        {showModal && <Modal onClose={this.toggleModal} />}
       </>
     );
   }
