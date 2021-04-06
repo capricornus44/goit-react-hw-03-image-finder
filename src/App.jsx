@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import pixabayApi from './services/pixabayApi';
 import Searchbar from './components/Searchbar';
-// import Loader from 'react-loader-spinner';
 import Spinner from './components/Spinner';
 import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import Modal from './components/Modal';
 
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import scss from './App.module.scss';
 
 class App extends Component {
   state = {
     showModal: false,
-    hits: [], // array of objects (images)
+    hits: [],
     currentPage: 1,
     request: '',
     isLoading: false,
@@ -23,7 +23,7 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.request !== this.state.request) {
-      this.fetchHits();
+      this.fetchHits(this.state.request);
     }
   }
 
@@ -34,7 +34,6 @@ class App extends Component {
       hits: [],
       error: null,
     });
-    this.fetchHits(seachQuery);
   };
 
   // ======================== HTTP request logic ==================================
@@ -76,7 +75,7 @@ class App extends Component {
     const { hits, isLoading, showModal, largeImageURL } = this.state;
 
     return (
-      <>
+      <div className={scss.app}>
         <Searchbar onSubmit={this.onChangeQuery} />
 
         <ImageGallery hits={hits} onClick={this.toggleModal} />
@@ -87,7 +86,7 @@ class App extends Component {
         {showModal && (
           <Modal largeImageURL={largeImageURL} onClose={this.toggleModal} />
         )}
-      </>
+      </div>
     );
   }
 }
