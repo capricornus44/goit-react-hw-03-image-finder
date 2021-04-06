@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import pixabayApi from './services/pixabayApi';
 import Searchbar from './components/Searchbar';
-// import Loader from './components/Loader';
 import Loader from 'react-loader-spinner';
-// import ImageGallery from './components/ImageGallery';
-// import ImageGalleryItem from './components/ImageGalleryItem';
+import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import Modal from './components/Modal';
 
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-import './App.scss';
 
 class App extends Component {
   state = {
     showModal: false,
-    hits: [],
+    hits: [], // array of objects (images)
     currentPage: 1,
     request: '',
     isLoading: false,
     error: null,
+    largeImageURL: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -64,41 +62,38 @@ class App extends Component {
   };
 
   // ======================== Function to open/close modal box ====================
-  toggleModal = () => {
+  toggleModal = hit => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
+      largeImageURL: hit,
     }));
   };
 
   // ======================== Rendering ===========================================
   render() {
-    const { showModal, hits, isLoading } = this.state;
+    const { hits, isLoading, showModal, largeImageURL } = this.state;
 
     return (
       <>
         <Searchbar onSubmit={this.onChangeQuery} />
+
+        <ImageGallery hits={hits} onClick={this.toggleModal} />
+
         {isLoading && (
           <Loader
-            type="Watch"
+            className="loader"
+            type="ThreeDots"
             color="#00BFFF"
             height={100}
             width={100}
             timeout={3000}
           />
         )}
-        <ul>
-          {hits.map(({ id, webformatURL }) => (
-            <li key={id}>
-              <img src={webformatURL} alt="" />
-            </li>
-          ))}
-        </ul>
-
-        {/* <ImageGallery /> */}
-        {/* <Loader /> */}
-
         {hits.length > 0 && !isLoading && <Button onClick={this.fetchHits} />}
-        {showModal && <Modal onClose={this.toggleModal} />}
+
+        {showModal && (
+          <Modal largeImageURL={largeImageURL} onClose={this.toggleModal} />
+        )}
       </>
     );
   }
