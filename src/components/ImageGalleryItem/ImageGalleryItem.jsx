@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import scss from './ImageGalleryItem.module.scss';
 
 const ImageGalleryItem = ({ src, source, id, alt, onClick }) => {
@@ -12,6 +13,13 @@ const ImageGalleryItem = ({ src, source, id, alt, onClick }) => {
       />
     </li>
   );
+};
+
+ImageGalleryItem.propTypes = {
+  src: PropTypes.string.isRequired,
+  source: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default ImageGalleryItem;

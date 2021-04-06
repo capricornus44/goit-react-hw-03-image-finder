@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem/';
 
 import scss from './ImageGallery.module.scss';
@@ -17,6 +18,14 @@ const ImageGallery = ({ hits, onClick }) => {
       ))}
     </ul>
   );
+};
+
+ImageGallery.propTypes = {
+  hits: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default ImageGallery;
