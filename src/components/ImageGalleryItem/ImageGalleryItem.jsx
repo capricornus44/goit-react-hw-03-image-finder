@@ -7,7 +7,6 @@ const ImageGalleryItem = ({ src, source, id, alt, onClick }) => {
       <img
         src={src}
         alt={alt}
-        data-id={id}
         className={scss.imageGalleryItemImage}
         onClick={() => onClick(source)}
       />
